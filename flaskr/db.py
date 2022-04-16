@@ -10,9 +10,7 @@ def get_db():
         g.db = sqlite3.connect(
             current_app.config['DATABASE'],
             detect_types=sqlite3.PARSE_DECLTYPES
-        )
-        g.db.row_factory = sqlite3.Row
-    
+            )
     return g.db
 
 
@@ -22,15 +20,18 @@ def init_db():
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
+
 @click.command('init-db')
 @with_appcontext
 def init_db_command():
-
-    """ Clear the Existing data and create new tables """
+    """ Clear existing data and create new tables """
     init_db()
-    click.echo('Initialized the database.')
+    click.echo(' Initialized the database. ')
+
 
 def init_app(app):
+    # To register close_db and init_db_command functions with the app instance
+    # Otherwise they wont be used by the Application
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
 
