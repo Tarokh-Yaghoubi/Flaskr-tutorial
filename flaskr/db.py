@@ -30,8 +30,6 @@ def init_db_command():
 
 
 def init_app(app):
-    # To register close_db and init_db_command functions with the app instance
-    # Otherwise they wont be used by the Application
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
 
